@@ -10,6 +10,7 @@ import fr.rooobert.energy.rooobot.Plugin;
 import fr.rooobert.energy.rooobot.PluginManager;
 
 // XXX Envisager une interface Web pour la gestion des plugins
+/** Native plugin that enables dynamic management of plugins via IRC commands. */
 public class PluginManagerPlugin extends Plugin {
 	// --- Constants
 	private static final Logger logger = LogManager.getLogger(PluginManagerPlugin.class);

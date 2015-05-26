@@ -15,6 +15,7 @@ import org.apache.log4j.Logger;
 
 import fr.rooobert.JarClassLoader;
 
+/** Class to manage plugins */
 public class PluginManager implements Iterable<Plugin> {
 	// --- Constants
 	private static final Logger logger = LogManager.getLogger(PluginManager.class);
@@ -68,7 +69,8 @@ public class PluginManager implements Iterable<Plugin> {
 		return plugins;
 	}
 
-	/** @param plugin */
+	/** Adds a plugin to the list of installed plugins
+	 * @param plugin */
 	public synchronized void registerPlugin(Plugin plugin) {
 		String name = plugin.getName();
 
@@ -148,7 +150,7 @@ public class PluginManager implements Iterable<Plugin> {
 					}
 				} else {
 					// Development mode
-					logger.warn("Native plugin. Loading jar skipped : " + jarFile.getPath());
+					logger.info("Native plugin (or development mode). JAR NOT loaded : " + jarFile.getPath());
 					try {
 						clazz = Class.forName(className);
 					} catch (ClassNotFoundException e) {
@@ -163,7 +165,7 @@ public class PluginManager implements Iterable<Plugin> {
 							@SuppressWarnings("unchecked")
 							Class<? extends Plugin> clazzPlugin = (Class<? extends Plugin>) clazz;
 							Constructor<? extends Plugin> constructor = clazzPlugin.getConstructor(String.class, Properties.class);
-
+							
 							logger.debug("Creating a new " + clazzPlugin.getCanonicalName() + "...");
 							plugin = constructor.newInstance(name, props);
 						} else {
@@ -181,10 +183,12 @@ public class PluginManager implements Iterable<Plugin> {
 				logger.error("Plugin class not defined in configuration file " + propsFile.getPath());
 			}
 		}
-
+		
 		return plugin;
 	}
 
+	/** Disables and unload a plugin from memory
+	 * @param plugin */
 	public synchronized void unloadPlugin(Plugin plugin) {
 		// Disable plugin
 		if (plugin.isEnabled()) {

@@ -56,12 +56,7 @@ public class RoOoBoT {
 					// Plugin manager
 					PluginManager pluginManager = PluginManager.getInstance();
 					if (pluginManager != null) {
-						/* XXX Outdated ! To delete ?
-						// Load native plugins
-						logger.debug("Loading native plugins...");
-						pluginManager.registerPlugin(new PluginManagerPlugin(props));
-						pluginManager.registerPlugin(new ShutdownPlugin(props));*/
-						
+						// Initialize all plugins
 						int plugins = pluginManager.loadAllPlugins();
 						logger.info(plugins + " plugins loaded !");
 						Bot bot = null;
@@ -77,6 +72,7 @@ public class RoOoBoT {
 							bot.run();
 							logger.info("Finished running bot");
 						}
+						
 						// Cleanup
 						bot = null;
 						try {
@@ -90,5 +86,7 @@ public class RoOoBoT {
 		} else {
 			logger.error("Usage : " + RoOoBoT.class.getName() + " <config.properties>" );
 		}
+		
+		logger.info("Quitting " + RoOoBoT.class.getCanonicalName());
 	}
 }

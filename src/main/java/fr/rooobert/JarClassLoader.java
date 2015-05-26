@@ -3,7 +3,7 @@ package fr.rooobert;
 import java.net.URL;
 import java.net.URLClassLoader;
 
-/** Subclass of {@link URLClassLoader} to load classes from a JAR file. */
+/** Subclass of {@link URLClassLoader} to load classes dynamically from a JAR file. */
 public class JarClassLoader extends URLClassLoader {
 	// --- Constants
 	private final URL url;

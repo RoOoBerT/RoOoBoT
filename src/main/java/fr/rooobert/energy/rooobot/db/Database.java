@@ -8,6 +8,7 @@ import java.util.Properties;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
+/** Database connection wrapper */
 public class Database {
 	// --- Constants
 	private static final Logger logger = LogManager.getLogger(Database.class);

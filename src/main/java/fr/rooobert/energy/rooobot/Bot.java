@@ -27,9 +27,12 @@ import fr.rooobert.energy.rooobot.event.IrcMessageEvent;
 import fr.rooobert.energy.rooobot.listeners.IrcMessageListener;
 import fr.rooobert.energy.rooobot.plugins.listeners.MessageListener;
 
+/** The main Bot class */
 public class Bot extends ListenerAdapter<PircBotX> implements Runnable, IrcBot {
 	// --- Constants
 	private static final Logger logger = LogManager.getLogger(IrcBot.class);
+	
+	/** Regular expression used to parse text command parameters */
 	private static final Pattern COMMAND_REGEX = Pattern.compile("^!(\\w+)\\s*(.*)$");
 	
 	// --- Attributes
@@ -235,18 +238,6 @@ public class Bot extends ListenerAdapter<PircBotX> implements Runnable, IrcBot {
 			}
 		}
 	}
-	
-	/*@Override
-	protected synchronized void onPrivateMessage(String sender, String login, String hostname, String message) {
-		// Private message received
-		synchronized (this.pluginManager) {
-			for (Plugin plugin : this.pluginManager) {
-				if (plugin.isEnabled()) {
-					plugin.onPrivateMessage(sender, login, hostname, message);
-				}
-			}
-		}
-	}*/
 	
 	@Override
 	public void sendMessage(String target, String message) {
