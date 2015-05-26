@@ -19,13 +19,17 @@ import org.pircbotx.exception.IrcException;
 import org.pircbotx.hooks.ListenerAdapter;
 import org.pircbotx.hooks.events.ConnectEvent;
 import org.pircbotx.hooks.events.MessageEvent;
+import org.pircbotx.hooks.events.PrivateMessageEvent;
 
 import com.google.common.collect.ImmutableSortedSet;
 
 import fr.rooobert.energy.rooobot.comm.Messages;
 import fr.rooobert.energy.rooobot.event.IrcMessageEvent;
+import fr.rooobert.energy.rooobot.event.IrcPrivateMessageEvent;
 import fr.rooobert.energy.rooobot.listeners.IrcMessageListener;
+import fr.rooobert.energy.rooobot.listeners.IrcPrivateMessageListener;
 import fr.rooobert.energy.rooobot.plugins.listeners.MessageListener;
+import fr.rooobert.energy.rooobot.plugins.listeners.PrivateMessageListener;
 
 /** The main Bot class */
 public class Bot extends ListenerAdapter<PircBotX> implements Runnable, IrcBot {
@@ -46,6 +50,7 @@ public class Bot extends ListenerAdapter<PircBotX> implements Runnable, IrcBot {
 	
 	// Event listeners
 	private final List<MessageListener> messageListeners = new ArrayList<>();
+	private final List<PrivateMessageListener> privateMessageListeners = new ArrayList<>();
 	
 	// --- Methods
 	public Bot(Properties props, PluginManager pluginManager) throws Exception {
@@ -185,7 +190,7 @@ public class Bot extends ListenerAdapter<PircBotX> implements Runnable, IrcBot {
 		final String sender = event.getUser().getNick();
 		final String login = event.getUser().getLogin();
 		final String message = event.getMessage();
-		
+
 		// Filter messages from other channels or from self
 		if (channel.equalsIgnoreCase(this.channel) && !sender.equals(this.getNick())) {
 			
@@ -240,6 +245,22 @@ public class Bot extends ListenerAdapter<PircBotX> implements Runnable, IrcBot {
 	}
 	
 	@Override
+	public void onPrivateMessage(PrivateMessageEvent<PircBotX> event) throws Exception {
+		// Standard user message
+		IrcPrivateMessageEvent e = new IrcPrivateMessageEvent(new Date(event.getTimestamp()), event.getUser().getNick(), event.getMessage());
+		
+		// Dispatch the event to the right listener or until it is mark as consumed
+		Iterator<PrivateMessageListener> it = this.privateMessageListeners.iterator();
+		while (it.hasNext() && !e.isConsumed()) {
+			PrivateMessageListener ml = it.next();
+			if (ml.match(e)) {
+				ml.getListener().onPrivateMessage(e);
+			}
+		}
+	}
+	
+
+	@Override
 	public void sendMessage(String target, String message) {
 		this.botX.getUserChannelDao().getChannel(target).send().message(message);
 	}
@@ -256,6 +277,31 @@ public class Bot extends ListenerAdapter<PircBotX> implements Runnable, IrcBot {
 	@Override
 	public String getNick() {
 		return this.botX.getNick();
+	}
+	
+	@Override
+	public void addPrivateMessageListener(Plugin plugin, String nick, IrcPrivateMessageListener listener) {
+		this.privateMessageListeners.add(new PrivateMessageListener(plugin, nick, listener));
+	}
+	
+	@Override
+	public void removePrivateMessageListener(IrcPrivateMessageListener listener) {
+		this.messageListeners.remove(listener);
+	}
+	
+	@Override
+	public int removePrivateMessageListener(Plugin plugin) {
+		int count = 0;
+		
+		Iterator<PrivateMessageListener> it = this.privateMessageListeners.iterator();
+		while (it.hasNext()) {
+			PrivateMessageListener ml = it.next();
+			if (ml.getPlugin() == plugin) {
+				it.remove();
+				count++;
+			}
+		}
+		return count;
 	}
 	
 	@Override
