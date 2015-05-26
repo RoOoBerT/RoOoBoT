@@ -1,0 +1,106 @@
+[22:43:49] <MoOoRice> Je disais donc
+[22:44:05] <L`Droid> Ouiiiii
+[22:44:09] <L`Droid> Bravo :D
+[22:44:17] <MoOoRice>  En gros, ce serait un projet Java classique
+[22:44:17] * L`Droid fait une hola
+[22:44:21] <MoOoRice>  avec un fichier .properties de configuration
+[22:44:50] <MoOoRice> Config IRC : server/port/channel/nickname etc.
+[22:45:00] <MoOoRice> Config BDD : server/port/type etc.
+[22:45:14] <MoOoRice> Jusque là en principe pas de problème
+[22:45:23] <L`Droid> Moui
+[22:45:35] <MoOoRice> Vis à vis des plugins qui doivent être modulables
+[22:45:52] <MoOoRice> je pensais les mettre dans un dossier ./plugins/
+[22:46:08] <L`Droid> Yep
+[22:46:13] <MoOoRice> sous la forme d'un .jar (archive projet Java) + un .properties pour la config du plugin
+[22:46:53] <MoOoRice> Certes c'est + lourd qu'un simple script, donc moins adapté pour faire une boîte à idées par exemple
+[22:47:02] <L`Droid> Ou genre un défaut.conf généré au premier chargement du plugin 
+[22:47:18] <MoOoRice> Mais beaucoup plus puissant grâce au Java pour faire des trucs + avancés genre une mini-IA, des requetes HTTP etc.
+[22:47:50] <MoOoRice> techniquement générer un properties par défaut ne me paraît pas possible techniquement
+[22:48:06] <MoOoRice> quand j'aurai chargé le .jar dynamiquement faudra savoir quelle classe Java charger dedans
+[22:48:13] <MoOoRice> d'où la nécessité d'un .properties avec les infos dedans
+[22:48:26] <L`Droid> J'sais pas c'est quoi le properties 
+[22:48:45] <L`Droid> Moi je parle d'un.conf pour le plugin
+[22:48:55] <MoOoRice> c'est le même principe
+[22:49:00] <L`Droid> Genre un plug-in AdRotator 
+[22:49:02] <MoOoRice> .properties = .ini du Java (quelques différentes)
+[22:49:40] <L`Droid> Tu génère un.conf au premier lancement avec genre la fréquence à laquelle il balance les pubs etc
+[22:49:58] -Highlight Alert- Jojo: !calin MoOoRice  (irc.communaute-energy.tk/#Energy)
+[22:49:59] -Highlight Alert- Bender: Jojo fait un gros calin à MoOoRice (20) (irc.communaute-energy.tk/#Energy)
+[22:50:02] <L`Droid> Ça marche comme ça les plug-in minecraft 
+[22:51:37] <MoOoRice> je dois vérifier un truc
+[22:53:17] <MoOoRice> techniquement c'est pas possible tel que je l'ai pensé d'avoir seulement le .jar
+[22:53:31] <MoOoRice> il faut le .properties pour indiquer quelle classe charger dans le jar
+[22:53:48] <L`Droid> Ben oui
+[22:53:56] <L`Droid> Mais rien n'empêche d'avoir les deux nan ? 
+[22:54:02] <MoOoRice> tout à fait
+[22:54:08] <L`Droid> Enfin le. Properties il est pas dans le jar ? 
+[22:54:11] <MoOoRice> à part ce que j'avais compris que tu disais
+[22:54:21] <MoOoRice> je suis pas sûr que ça soit possible techniquement
+[22:54:33] <MoOoRice> mais à vérifier
+[22:54:51] <MoOoRice> je note un TODO
+[22:55:01] <L`Droid> Ben j'ai envie de dire "mojang l'a fait" ^^
+[22:57:42] <MoOoRice> effectivement
+[22:57:48] <MoOoRice> ça doit donc être possible :D
+[22:58:49] <L`Droid> Après comme dit j'y connais rien mais je pense que les 2 ont pas la même utilité 
+[22:59:00] <MoOoRice> les 2 fichiers ?
+[22:59:37] <L`Droid> Vi
+[22:59:58] <MoOoRice> bref je vais y réfléchir
+[23:00:04] <MoOoRice> dans tous les cas on a les plugns dans un dossier
+[23:00:16] <L`Droid> Yep
+[23:00:17] <MoOoRice> à vérifier si il faut 1 jar ou {1 jar + 1 props} par plugin
+[23:00:31] <MoOoRice> Pour l'activation/désactivation de plugins
+[23:00:58] <MoOoRice> le + simple est sans doute que le bot ait une commande
+[23:01:05] <MoOoRice> genre !plugin enable/disable
+[23:01:29] <L`Droid> Une interface Web ça serait top :D
+[23:01:38] <MoOoRice> xDD
+[23:01:51] <MoOoRice> T'es sérieux ,
+[23:02:10] <L`Droid> Plus ou moins
+[23:02:17] <MoOoRice> j'avoue que ça serait très fun
+[23:02:41] <L`Droid> Avec genre un côté user avec l'inventaire, les stats etc
+[23:03:02] <L`Droid> Mais bon commençons par le début 
+[23:03:07] <MoOoRice> tout à fait :D
+[23:03:23] <L`Droid> On verra ça si tu t'emmerdes sur le long terme 
+[23:03:24] <L`Droid> XD 
+[23:03:59] <MoOoRice> +1
+[23:04:05] <MoOoRice> Du coup la version basique
+[23:04:13] <MoOoRice> ce serait !plugin enable/disable
+[23:04:42] <MoOoRice> genre !google enable/disable pour qu'il arrête de rechercher les liens sur le net
+[23:04:44] <L`Droid> Pour le coup je pensais presque plus à un pv-shell
+[23:04:52] <L`Droid> Eggdrop-like
+[23:04:59] <MoOoRice> je connais pas eggdrop
+[23:05:08] <L`Droid> Ssh ? 
+[23:05:12] <MoOoRice> oui x)
+[23:05:19] <L`Droid> Ssh-like
+[23:05:28] <MoOoRice> intéressant comme idée
+[23:05:50] <MoOoRice> Genre tu envoies une commande pour t'identifier
+[23:05:52] <MoOoRice> en PM
+[23:06:00] <MoOoRice> il te répond "login as:?"
+[23:06:03] <L`Droid> Nope 
+[23:06:06] <MoOoRice> puis Password: ?
+[23:06:11] <L`Droid> Ça implique de taper le pass
+[23:06:16] <MoOoRice> en clair
+[23:06:18] <MoOoRice> :D
+[23:06:21] <L`Droid> Donc visible dans le chat 
+[23:06:37] <L`Droid> Quand tu est register NickServ 
+[23:06:47] <L`Droid> Tu as le mode +r
+[23:07:39] <L`Droid> Suffit de vérifier si l'user (is"op" && +r) 
+[23:07:46] <L`Droid> Ou alors
+[23:08:00] <L`Droid> Vu que tfacons tu vas fouiller dans une db
+[23:08:01] <MoOoRice> donc dans le fichier de config j'indique une liste de usernames autorisés à enable/disable les plugins
+[23:08:15] <L`Droid> Ouais pas con
+[23:08:28] <L`Droid> C'est suffisant pour commencer
+
+* Chargement des plugins
+	Dans un répertoire ./plugins/ : {1.jar + 1.properties}
+
+* Activation/désactivation plugins
+	Syntaxe : !PluginManager enable/disable <plugin>
+	Condition : Flag +R (registered) + in(plugins.admin)
+	
+	Accès sur chaque plugin :
+		RequireRegistration (+r)
+		RequirePrivileges = user|vop|hop|sop|founder
+		AllowedUsers = L`Droid MoOoRice Ronflex
+
+* Installation d'un plugin
+	

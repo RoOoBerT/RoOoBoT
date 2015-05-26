@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration monitorInterval="10" strict="true" status="OFF">
+	<!-- List of logger output destinations -->
+  <appenders>
+		<Console name="Console" target="SYSTEM_OUT">
+			<PatternLayout pattern="%d{ISO8601} [%t] %-5level %logger{36} - %msg%n"/>
+		</Console>
+		<RollingFile name="RollingFile" fileName="rooobot.log" filePattern="logs/$${date:yyyy-MM}/app-%d{MM-dd-yyyy}-%i.log.gz">
+			<PatternLayout>
+				<pattern>%d %p %C{1.} [%t] %m%n</pattern>
+			</PatternLayout>
+			<Policies>
+				<TimeBasedTriggeringPolicy />
+				<SizeBasedTriggeringPolicy size="10 MB"/>
+			</Policies>
+		</RollingFile>
+	</appenders>
+  	<!-- Configuration of log levels -->
+	<loggers>
+		<logger name="org.apache.http" level="INFO" />
+		
+		<logger name="org.pircbotx.InputParser" level="WARN" />
+		<logger name="org.pircbotx.output.OutputRaw" level="WARN" />
+		
+		<logger name="fr.rooobert.energy.rooobot.db.Database" level="DEBUG" />
+		<logger name="fr.rooobert.energy.rooobot.Plugin" level="DEBUG" />
+		<logger name="fr.rooobert.energy.rooobot.IrcBot" level="DEBUG" />
+		<root level="ALL">
+			<appender-ref ref="Console"/>
+			<appender-ref ref="RollingFile"/>
+		</root>
+	</loggers>
+</configuration>
