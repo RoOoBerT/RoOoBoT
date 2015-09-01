@@ -1,6 +1,7 @@
 package fr.rooobert.energy.rooobot;
 
 import java.io.IOException;
+import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
@@ -9,12 +10,16 @@ import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.net.SocketFactory;
+import javax.net.ssl.SSLSocketFactory;
+
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.pircbotx.Channel;
 import org.pircbotx.Configuration;
 import org.pircbotx.PircBotX;
 import org.pircbotx.User;
+import org.pircbotx.UtilSSLSocketFactory;
 import org.pircbotx.exception.IrcException;
 import org.pircbotx.hooks.ListenerAdapter;
 import org.pircbotx.hooks.events.ConnectEvent;
@@ -24,6 +29,7 @@ import org.pircbotx.hooks.events.PrivateMessageEvent;
 import com.google.common.collect.ImmutableSortedSet;
 
 import fr.rooobert.energy.rooobot.comm.Messages;
+import fr.rooobert.energy.rooobot.db.Database;
 import fr.rooobert.energy.rooobot.event.IrcMessageEvent;
 import fr.rooobert.energy.rooobot.event.IrcPrivateMessageEvent;
 import fr.rooobert.energy.rooobot.listeners.IrcMessageListener;
@@ -46,7 +52,10 @@ public class Bot extends ListenerAdapter<PircBotX> implements Runnable, IrcBot {
 	
 	// Configuration
 	private final String host;
+	private final int port;
 	private final String channel;
+	private final boolean ssl;
+	private final boolean trustAllCertificates;
 	
 	// Event listeners
 	private final List<MessageListener> messageListeners = new ArrayList<>();
@@ -61,10 +70,23 @@ public class Bot extends ListenerAdapter<PircBotX> implements Runnable, IrcBot {
 		this.channel = props.getProperty("irc.channel", RoOoBoT.class.getName());
 		//super.setVerbose(Boolean.parseBoolean(props.getProperty("irc.verbose", "false")));
 		
+		this.port = Utilities.getInt(props.getProperty("irc.port"), 6667);
+		this.ssl = Boolean.parseBoolean(props.getProperty("irc.ssl"));
+		this.trustAllCertificates = Boolean.parseBoolean(props.getProperty("irc.ssl.trustAllCertificates", "false"));
+		
+		// SSL Handling
+		UtilSSLSocketFactory utilSslSocketFactory = (UtilSSLSocketFactory) new UtilSSLSocketFactory();
+		if (this.trustAllCertificates) {
+			logger.warn("WARNING ! Bot is configured to trust ALL SSL certificates !");
+			utilSslSocketFactory.trustAllCertificates();
+		}
+		
 		Configuration<?> configuration = new Configuration.Builder<>()
 				.setName(props.getProperty("irc.nickname", RoOoBoT.class.getName())) // IRC nickname
 				.setServerHostname(props.getProperty("irc.server", "127.0.0.1")) // IRC server
+				.setServerPort(this.port) // IRC server port
 				.addAutoJoinChannel(props.getProperty("irc.channel", "#" + RoOoBoT.class.getName())) // IRC channel
+				.setSocketFactory(this.ssl ? utilSslSocketFactory : null)
 				.addListener(this) // IRC event listener
 				.buildConfiguration();
 		
@@ -327,5 +349,10 @@ public class Bot extends ListenerAdapter<PircBotX> implements Runnable, IrcBot {
 			}
 		}
 		return count;
+	}
+
+	@Override
+	public Connection getConnection() {
+		return Database.getInstance().getConnection();
 	}
 }

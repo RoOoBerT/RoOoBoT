@@ -100,6 +100,11 @@ public class Database {
 		return Database.instance;
 	}
 	
+	/** @return Connection to the database */
+	public Connection getConnection() {
+		return this.connection;
+	}
+	
 	/** Close the database connection 
 	 * @throws Exception */
 	public void close() throws Exception {
@@ -150,26 +155,4 @@ public class Database {
 		}
 		this.connection = null;
 	}
-	
-	// == Users ==
-	/*public synchronized User getUser(String nickname) {
-		return this.users.get(nickname);
-	}
-	
-	public synchronized void addUser(User user) {
-		this.users.put(user.getName(), user);
-	}
-	
-	// == Questions ==
-	public synchronized AbstractQuestion getQuestion(int index) {
-		return this.questions.get(index);
-	}
-	
-	public synchronized int getQuestionCount() {
-		return this.questions.size();
-	}
-
-	public void addQuestionCUM(CompleteUserMessage question) {
-		this.questions.add(question);
-	}*/
 }

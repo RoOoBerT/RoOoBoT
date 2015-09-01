@@ -77,10 +77,12 @@ public class RoOoBoT {
 						bot = null;
 						try {
 							database.close();
+							logger.info("Database closed correctly");
 						} catch (Exception e) {
 							logger.error("Error closing database : " + e.getMessage());
 						}
 					}
+					database = null;
 				}
 			}
 		} else {
