@@ -213,8 +213,8 @@ public class Bot extends ListenerAdapter<PircBotX> implements Runnable, IrcBot {
 		final String login = event.getUser().getLogin();
 		final String message = event.getMessage();
 
-		// Filter messages from other channels or from self
-		if (channel.equalsIgnoreCase(this.channel) && !sender.equals(this.getNick())) {
+		// TODO Filter messages from other channels or from self
+		if (/*channel.equalsIgnoreCase(this.channel) &&*/ !sender.equals(this.getNick())) {
 			
 			// TODO Verifier qu'on ne traite pas les messages d'un autre bot !
 			//User user = event.getUser().get;
@@ -350,9 +350,14 @@ public class Bot extends ListenerAdapter<PircBotX> implements Runnable, IrcBot {
 		}
 		return count;
 	}
-
+	
 	@Override
 	public Connection getConnection() {
 		return Database.getInstance().getConnection();
+	}
+	
+	@Override
+	public void joinChannel(String channel) {
+		this.botX.sendIRC().joinChannel(channel);
 	}
 }

@@ -34,8 +34,8 @@ public class MessageListener extends EventListener {
 	
 	public boolean match(IrcMessageEvent event) {
 		boolean result = false;
-		if ((this.channel == null || event.getChannel().equals(this.channel))
-				&& (this.nick == null || event.getUser().equals(this.nick))) {
+		if ((this.channel == null || event.getChannel().equalsIgnoreCase(this.channel))
+				&& (this.nick == null || event.getUser().equalsIgnoreCase(this.nick))) {
 			result = true;
 		}
 		return result;
