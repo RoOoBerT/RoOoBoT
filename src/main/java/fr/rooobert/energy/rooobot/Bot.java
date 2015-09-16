@@ -10,9 +10,6 @@ import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.net.SocketFactory;
-import javax.net.ssl.SSLSocketFactory;
-
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.pircbotx.Channel;
@@ -75,7 +72,7 @@ public class Bot extends ListenerAdapter<PircBotX> implements Runnable, IrcBot {
 		this.trustAllCertificates = Boolean.parseBoolean(props.getProperty("irc.ssl.trustAllCertificates", "false"));
 		
 		// SSL Handling
-		UtilSSLSocketFactory utilSslSocketFactory = (UtilSSLSocketFactory) new UtilSSLSocketFactory();
+		UtilSSLSocketFactory utilSslSocketFactory = new UtilSSLSocketFactory().disableDiffieHellman();
 		if (this.trustAllCertificates) {
 			logger.warn("WARNING ! Bot is configured to trust ALL SSL certificates !");
 			utilSslSocketFactory.trustAllCertificates();
